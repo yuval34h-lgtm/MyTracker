@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["src/app/app.component.css"],
-  "sourcesContent": [".nav {\n  display: flex;\n  gap: 10px;\n  padding: 12px;\n  background: #bbe5f2;\n  border-bottom: 1px solid #eee;\n}\n\nbutton {\n  padding: 8px 12px;\n  border: none;\n  background: white;\n  color: #bbe5f2;\n  border-radius: 8px;\n  cursor: pointer;\n}"],
-  "mappings": ";AAAA,CAAA;AACE,WAAA;AACA,OAAA;AACA,WAAA;AACA,cAAA;AACA,iBAAA,IAAA,MAAA;AACF;AAEA;AACE,WAAA,IAAA;AACA,UAAA;AACA,cAAA;AACA,SAAA;AACA,iBAAA;AACA,UAAA;AACF;",
-  "names": []
-}
