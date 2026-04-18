@@ -1,0 +1,90 @@
+<div class="container">
+  <h2>🍽️ Today’s Meals</h2>
+
+  <!-- 📅 DATE PICKER (shared for both modes) -->
+  <div class="card">
+    <h3>Date</h3>
+
+    <input
+      type="datetime-local"
+      [value]="selectedDate()"
+      (input)="selectedDate.set($any($event.target).value)"
+    />
+  </div>
+
+  <!-- 🧠 FOOD MODE -->
+  <div class="card">
+    <h3>Quick Add (Food DB)</h3>
+
+    <select (change)="selectedFood.set(foods()[$any($event.target).value])">
+      <option value="">Select food</option>
+
+      @for (food of foods(); let i = $index; track food.id) {
+        <option [value]="i">{{ food.name }}</option>
+      }
+    </select>
+
+    <input
+      type="number"
+      placeholder="grams"
+      [value]="grams() ?? ''"
+      (input)="grams.set(+$any($event.target).value)"
+    />
+
+    <p>Calories: {{ calculatedCalories() }}</p>
+
+    <button (click)="addFromFood()">Add Food</button>
+  </div>
+
+  <!-- ✍️ MANUAL MODE -->
+  <div class="card">
+    <h3>Manual Entry</h3>
+    <div class="card">
+      @if (!selectedImage()) {
+        <input type="file" accept="image/*" (change)="onManualImage($event)" hidden #fileInput />
+        <button (click)="fileInput.click()">Upload Photo</button>
+
+      } @else {
+        <img [src]="selectedImage()" class="preview" />
+        <button (click)="clearManualImage()">Remove Photo</button>
+      }
+    </div>
+
+    <input
+      type="text"
+      placeholder="What did you eat?"
+      [value]="manualText()"
+      (input)="manualText.set($any($event.target).value)"
+    />
+
+    <input
+      type="number"
+      placeholder="Calories"
+      [value]="manualCalories() ?? ''"
+      (input)="manualCalories.set(+$any($event.target).value)"
+    />
+
+    <button (click)="addManual()">Add Manual Meal</button>
+  </div>
+
+  <!-- 📋 LIST -->
+  <div class="card">
+    <h3>Entries</h3>
+
+    @for (meal of meals(); track meal.id) {
+      <div class="item">
+        @if (meal.image) {
+          <img [src]="meal.image" class="thumb" />
+        }
+        <div class="meal-info">
+          <strong>{{ meal.name }}</strong>
+          <small>{{ meal.date | date: 'dd/MM/yy HH:mm' }}</small>
+        </div>
+
+        <p>{{ meal.calories }} kcal</p>
+
+        <button (click)="remove(meal.id)">✕</button>
+      </div>
+    }
+  </div>
+</div>

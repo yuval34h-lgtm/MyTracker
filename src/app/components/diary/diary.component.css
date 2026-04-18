@@ -1,0 +1,62 @@
+.diary {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-card {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+input[type="text"],
+input[type="file"] {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.preview {
+  margin-top: 10px;
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 14px;
+  border: none;
+  background: #2d6cdf;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.list {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.food-item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.content {
+  flex: 1;
+}
+
+.food-image {
+  margin-top: 6px;
+  width: 100%;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}

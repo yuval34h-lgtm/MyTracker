@@ -1,0 +1,45 @@
+<div class="diary">
+
+  <div class="input-card">
+    <h2>Add Food</h2>
+
+    <input
+      type="text"
+      placeholder="What did you eat?"
+      [value]="foodText()"
+      (input)="foodText.set($any($event.target).value)"
+    />
+
+    <!-- 📸 Upload -->
+    <input type="file" accept="image/*" (change)="onFileSelected($event)" />
+
+    <!-- 👀 Preview -->
+    @if (selectedImage()) {
+      <img [src]="selectedImage()" class="preview" />
+    }
+
+    <button (click)="addFood()">Add</button>
+  </div>
+
+  <div class="list">
+    <h3>Today</h3>
+
+    @for (item of foodList(); track item.id) {
+      <div class="food-item">
+
+        <div class="content">
+          <strong>{{ item.text }}</strong>
+          <p>{{ item.time }}</p>
+
+          @if (item.image) {
+            <img [src]="item.image" class="food-image" />
+          }
+        </div>
+
+        <button (click)="remove(item.id)">✕</button>
+      </div>
+    }
+
+  </div>
+
+</div>
