@@ -1,0 +1,32 @@
+<div class="card">
+
+  <h2>Food Database</h2>
+
+  <input
+    placeholder="Food name"
+    [value]="name()"
+    (input)="name.set($any($event.target).value)"
+  />
+
+  <input
+    type="number"
+    placeholder="Calories per 100g"
+    [value]="calories() ?? ''"
+    (input)="calories.set(+($any($event.target).value))"
+  />
+
+  <button (click)="addFood()">Add</button>
+
+  <div class="list">
+
+    @for (food of foods(); track food.id) {
+      <div class="item">
+        <strong>{{ food.name }}</strong>
+        <span>{{ food.caloriesPer100g }} kcal / 100g</span>
+        <button (click)="remove(food.id)">✕</button>
+      </div>
+    }
+
+  </div>
+
+</div>
