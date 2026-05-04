@@ -1,0 +1,87 @@
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.meal-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 4px;
+}
+
+.meal-info strong {
+  font-size: 14px;
+  color: #111;
+}
+
+.meal-info small {
+  font-size: 12px;
+  color: #888;
+}
+
+.ingredients {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ingredient {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  color: #666;
+}
+
+.ingredient span:first-child {
+  font-weight: 500;
+}
+
+.meal-calories {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.total-calories {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.remove-btn {
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.remove-btn:hover {
+  background: #fecaca;
+}

@@ -1,0 +1,208 @@
+<div class="container" (click)="closeCalendar()">
+  <!-- DATE NAVIGATION -->
+  <div class="date-nav">
+    @for (day of last7Days(); track day.date) {
+      <button
+        class="day-btn"
+        [class.active]="day.date === selectedDate()"
+        (click)="selectDate(day.date)"
+      >
+        {{ day.label }}
+      </button>
+    }
+
+    <div class="calendar-wrapper">
+      <button #calendarBtn class="calendar-btn" (click)="toggleCalendar(calendarBtn)">📅</button>
+      @if (showCalendar()) {
+        <div class="calendar-backdrop" (click)="closeCalendar()"></div>
+        <div class="calendar-dropdown" [style.top.px]="calendarTop()" [style.right.px]="calendarRight()">
+          <input
+            type="date"
+            [value]="selectedDate()"
+            (change)="onCalendarChange($event)"
+            class="calendar-input"
+          />
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- MEALS LIST -->
+  <div class="meals-section">
+    @for (meal of mealsForSelectedDate(); track meal.id) {
+      <app-meal-card [meal]="meal" (remove)="remove($event)" />
+    } @empty {
+      <p class="empty-state">No meals logged for this day</p>
+    }
+  </div>
+
+  <!-- FLOATING ACTION BUTTON -->
+  <button class="fab" (click)="openAddOptions()">+</button>
+
+  <!-- ADD OPTIONS MODAL -->
+  @if (showAddOptions()) {
+    <div class="modal-backdrop" (click)="showAddOptions.set(false)">
+      <div class="modal-panel" (click)="$event.stopPropagation()">
+        <h3>Add Meal</h3>
+        <button class="option-btn" (click)="openManualEntry()">✍️ Manual Entry</button>
+        <button class="option-btn" (click)="openQuickAdd()">🧠 Quick Add</button>
+        <button class="cancel-btn" (click)="showAddOptions.set(false)">Cancel</button>
+      </div>
+    </div>
+  }
+
+  <!-- MANUAL MEAL BUILDER MODAL -->
+  @if (showManualMealBuilder()) {
+    <div class="modal-backdrop" (click)="showManualMealBuilder.set(false)">
+      <div class="modal-panel modal-large" (click)="$event.stopPropagation()">
+        <h3>Build Meal</h3>
+
+        <!-- MEAL NAME WITH AUTO-COMPLETE -->
+        <div class="input-wrapper">
+          <input
+            type="text"
+            placeholder="Meal name (optional)"
+            [value]="currentMealName()"
+            (input)="currentMealName.set($any($event.target).value)"
+            class="square-input"
+          />
+          @if (mealNameSuggestions().length > 0) {
+            <div class="autocomplete-dropdown">
+              @for (suggestion of mealNameSuggestions(); track suggestion) {
+                <div class="suggestion-item" (click)="selectMealNameSuggestion(suggestion)">
+                  {{ suggestion }}
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+        <!-- MEAL COUNT (servings) -->
+        <div class="meal-count-section">
+          <label>Meal count (servings):</label>
+          <input
+            type="number"
+            [value]="currentMealCount()"
+            (input)="currentMealCount.set(+$any($event.target).value)"
+            min="1"
+            class="square-input small-input"
+          />
+        </div>
+
+        <!-- INGREDIENTS SQUARES -->
+        <div class="ingredients-squares">
+          @for (ing of currentMealIngredients(); track ing.name; let i = $index) {
+            <div class="ingredient-square">
+              <button class="remove-square" (click)="removeCurrentIngredient(i)">✕</button>
+              <div class="square-content">
+                @if (editingIngredientIndex() === i && editingField() === 'name') {
+                  <input
+                    type="text"
+                    [value]="ing.name"
+                    (input)="updateIngredientName(i, $event)"
+                    (blur)="saveEdit()"
+                    class="inline-edit"
+                    autofocus
+                  />
+                } @else {
+                  <strong (dblclick)="startEdit(i, 'name')">{{ ing.name }}</strong>
+                }
+                @if (ing.count != null) {
+                  <span (dblclick)="startEdit(i, 'calories')">{{ ing.count }} pcs</span>
+                }
+                @if (editingIngredientIndex() === i && editingField() === 'calories') {
+                  <input
+                    type="number"
+                    [value]="ing.calories"
+                    (input)="updateIngredientCalories(i, $event)"
+                    (blur)="saveEdit()"
+                    class="inline-edit"
+                    autofocus
+                  />
+                } @else {
+                  <span (dblclick)="startEdit(i, 'calories')">{{ ing.calories }} kcal</span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- ADD INGREDIENT BUTTON -->
+          <button class="add-ingredient-btn" (click)="toggleIngredientInput()">+ Add</button>
+        </div>
+
+        <!-- Total kcal display (separated from submit button) -->
+        <div class="total-calories-display">
+          <strong>Total: {{ currentMealTotalCalories }} kcal</strong>
+          @if (currentMealCount() > 1) {
+            <span>({{ currentMealCount() }} servings = {{ currentMealTotalCalories }} total)</span>
+          }
+        </div>
+
+        <!-- INGREDIENT INPUT (shown when add button clicked) -->
+        @if (showIngredientInput()) {
+          <div class="ingredient-input-section">
+            <div class="input-wrapper">
+              <input
+                type="text"
+                placeholder="Ingredient name"
+                [value]="manualText()"
+                (input)="manualText.set($any($event.target).value)"
+                class="square-input"
+              />
+              @if (ingredientNameSuggestions().length > 0) {
+                <div class="autocomplete-dropdown">
+                  @for (suggestion of ingredientNameSuggestions(); track suggestion) {
+                    <div class="suggestion-item" (click)="selectIngredientNameSuggestion(suggestion)">
+                      {{ suggestion }}
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+
+            <input
+              type="number"
+              placeholder="Calories"
+              [value]="manualCalories() ?? ''"
+              (input)="manualCalories.set(+$any($event.target).value)"
+              class="square-input"
+            />
+
+            <input
+              type="number"
+              placeholder="Count (pieces, optional)"
+              [value]="manualCount() ?? ''"
+              (input)="manualCount.set(+$any($event.target).value)"
+              class="square-input small-input"
+            />
+
+            <button (click)="addManualIngredient()">Add Ingredient</button>
+          </div>
+        }
+
+        <!-- QUICK ADD FROM GALLERY -->
+        <div class="quick-add-section">
+          <p>Or select from gallery:</p>
+          <app-food-gallery
+            [foods]="foods()"
+            [showTrigger]="false"
+            (foodSelected)="onFoodSelectedForQuickAdd($event)"
+          />
+        </div>
+
+        <!-- CONFIRM BUTTON (bottom) -->
+        <div class="modal-actions">
+          <button (click)="confirmMeal()" [disabled]="currentMealIngredients().length === 0">Confirm Meal</button>
+          <button class="cancel-btn" (click)="clearCurrentMeal(); showManualMealBuilder.set(false)">Cancel</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- FOOD GALLERY (always in template, shown via its own modal) -->
+  <app-food-gallery
+    [foods]="foods()"
+    [showTrigger]="false"
+    (foodSelected)="onFoodSelectedForQuickAdd($event)"
+  />
+</div>

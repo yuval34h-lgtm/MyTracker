@@ -1,23 +1,18 @@
 <div class="nav">
 
-  <button (click)="setView('diary')">Diary</button>
+  <button (click)="setView('tracker')">Tracker</button>
   <button (click)="setView('db')">Food Database</button>
-  <button (click)="setView('log')">Logger</button>
 
 </div>
 
 <div class="content">
 
-  @if (view() === 'diary') {
-    <app-diary />
+  @if (view() === 'tracker') {
+    <app-meal-log />
   }
 
   @if (view() === 'db') {
     <app-food-store />
-  }
-
-  @if (view() === 'log') {
-    <app-meal-log />
   }
 
 </div>

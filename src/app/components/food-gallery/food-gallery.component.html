@@ -1,0 +1,70 @@
+@if (showTrigger()) {
+  <!-- Trigger button -->
+  <button class="gallery-trigger" (click)="openGallery()">
+    @if (selectedFood()) {
+      <img [src]="selectedFood()!.image" class="trigger-thumb" />
+      <span>{{ selectedFood()!.name }}</span>
+    } @else {
+      <span class="trigger-icon">🖼️</span>
+      <span>Browse Food Gallery</span>
+    }
+    <span class="trigger-arrow">›</span>
+  </button>
+}
+
+<!-- Modal -->
+@if (galleryOpen()) {
+  <div class="modal-backdrop" (click)="closeGallery()">
+    <div class="modal-panel" (click)="$event.stopPropagation()">
+
+      @if (previewFood()) {
+        <!-- Detail view -->
+        <div class="detail-view">
+          <button class="back-btn" (click)="previewFood.set(null)">← Back</button>
+          <img [src]="previewFood()!.image" class="detail-img" />
+          <div class="detail-body">
+            <h2>{{ previewFood()!.name }}</h2>
+            <p class="kcal-badge">{{ previewFood()!.caloriesPer100g }} kcal / 100g</p>
+
+            @if (previewFood()!.weightPerPiece !== null) {
+              <!-- Count input for foods with weight per piece -->
+              <label>Count:</label>
+              <input type="number" min="1" [(ngModel)]="countInput" />
+            } @else {
+              <!-- Grams input for foods measured by weight -->
+              <label>Grams:</label>
+              <input type="number" min="1" [(ngModel)]="gramsInput" />
+            }
+
+            <div class="detail-actions">
+              <button class="btn-confirm" (click)="confirmSelection()">Add</button>
+              <button class="btn-cancel" (click)="closeGallery()">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+      } @else {
+        <!-- Gallery grid -->
+        <div class="gallery-header">
+          <h3>Food Gallery</h3>
+          <button class="close-btn" (click)="closeGallery()">✕</button>
+        </div>
+
+        <div class="gallery-grid">
+          @for (food of foods(); track food.id) {
+            <div class="gallery-card" (click)="previewFood.set(food)">
+              <div class="gallery-img-wrap">
+                <img [src]="food.image" [alt]="food.name" />
+              </div>
+              <div class="gallery-card-info">
+                <span class="food-name">{{ food.name }}</span>
+                <span class="food-kcal">{{ food.caloriesPer100g }} kcal/100g</span>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+    </div>
+  </div>
+}

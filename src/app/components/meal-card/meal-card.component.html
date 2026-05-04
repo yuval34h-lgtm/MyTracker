@@ -1,0 +1,26 @@
+<div class="item">
+  @if (meal().image) {
+    <img [src]="meal().image" class="thumb" />
+  }
+  <div class="meal-info">
+    <strong>{{ meal().name }}</strong>
+    <small>{{ meal().date | date: 'dd/MM/yy HH:mm' }}</small>
+    <div class="ingredients">
+      @for (ing of meal().ingredients; track ing.name) {
+        <div class="ingredient">
+          <span>{{ ing.name }}</span>
+          @if (ing.count != null) {
+            <span>{{ ing.count }} pcs</span>
+          } @else {
+            <span>{{ ing.grams }}g</span>
+          }
+          <span>{{ ing.calories }} kcal</span>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="meal-calories">
+    <p class="total-calories">{{ meal().totalCalories }} kcal</p>
+  </div>
+  <button class="remove-btn" (click)="remove.emit(meal().id)">✕</button>
+</div>

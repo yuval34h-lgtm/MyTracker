@@ -1,0 +1,405 @@
+.container {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  padding-bottom: 80px;
+  /* Space for FAB */
+}
+
+/* DATE NAVIGATION */
+.date-nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 20px;
+  overflow-x: auto;
+  padding: 10px 0;
+  position: relative;
+}
+
+.calendar-wrapper {
+  margin-left: auto;
+  position: relative;
+}
+
+.calendar-btn {
+  background: #e0e0e0;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.calendar-btn:hover {
+  background: #d0d0d0;
+}
+
+.calendar-dropdown {
+  position: fixed;
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 150;
+}
+
+.calendar-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 149;
+}
+
+.calendar-input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.day-btn {
+  background: #f5f5f5;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.day-btn:hover {
+  background: #e0e0e0;
+}
+
+.day-btn.active {
+  background: #bbe5f2;
+  border-color: #4a90a4;
+}
+
+/* MEALS SECTION */
+.meals-section {
+  min-height: 200px;
+}
+
+.empty-state {
+  text-align: center;
+  color: #999;
+  padding: 40px;
+  font-style: italic;
+}
+
+/* FLOATING ACTION BUTTON */
+.fab {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #4a90a4;
+  color: white;
+  border: none;
+  font-size: 32px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover {
+  transform: scale(1.1);
+}
+
+/* MODALS */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal-panel {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  min-width: 300px;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-large {
+  min-width: 400px;
+}
+
+/* MEAL COUNT SECTION */
+.meal-count-section {
+  margin: 15px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meal-count-section label {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.small-input {
+  width: 80px !important;
+  padding: 8px;
+}
+
+/* INLINE EDIT */
+.inline-edit {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid #4a90a4;
+  border-radius: 4px;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+/* TOTAL CALORIES DISPLAY */
+.total-calories-display {
+  margin: 15px 0;
+  padding: 10px;
+  background: #f0f9f0;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.total-calories-display strong {
+  font-size: 18px;
+  color: #2d5a27;
+}
+
+.total-calories-display span {
+  font-size: 12px;
+  color: #666;
+  margin-left: 8px;
+}
+
+.modal-panel h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* SQUARE INPUT */
+.square-input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.square-input:focus {
+  border-color: #4a90a4;
+  outline: none;
+}
+
+/* INPUT WRAPPER FOR AUTO-COMPLETE */
+.input-wrapper {
+  position: relative;
+}
+
+/* AUTO-COMPLETE DROPDOWN */
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  max-height: 150px;
+  overflow-y: auto;
+  z-index: 300;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.suggestion-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.suggestion-item:hover {
+  background: #f5f5f5;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+/* INGREDIENTS SQUARES */
+.ingredients-squares {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 15px 0;
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  min-height: 60px;
+}
+
+.ingredient-square {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  background: white;
+  border: 2px solid #4a90a4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.square-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.square-content strong {
+  font-size: 12px;
+  color: #333;
+  word-break: break-word;
+}
+
+.square-content span {
+  font-size: 11px;
+  color: #666;
+}
+
+.remove-square {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 10px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-ingredient-btn {
+  width: 100px;
+  height: 100px;
+  background: #f5f5f5;
+  border: 2px dashed #ddd;
+  border-radius: 8px;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.add-ingredient-btn:hover {
+  background: #e0e0e0;
+  border-color: #4a90a4;
+}
+
+/* INGREDIENT INPUT SECTION */
+.ingredient-input-section {
+  padding: 15px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* QUICK ADD SECTION */
+.quick-add-section {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+}
+
+.quick-add-section p {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #666;
+}
+
+/* OPTION BUTTONS */
+.option-btn {
+  width: 100%;
+  padding: 15px;
+  margin: 0;
+  background: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  background: #e0e0e0;
+  border-color: #4a90a4;
+}
+
+/* MODAL ACTIONS */
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modal-actions button {
+  flex: 1;
+}
+
+.cancel-btn {
+  background: #e0e0e0;
+}
+
+/* PREVIEW IMAGE */
+.preview {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* BUTTONS GENERAL */
+button {
+  padding: 10px;
+  background: #bbe5f2;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

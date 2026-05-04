@@ -1,0 +1,258 @@
+.gallery-trigger {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  background: #f0f9ff;
+  border: 2px dashed #7dd3f0;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-top: 0;
+  box-sizing: border-box;
+}
+
+.gallery-trigger:hover {
+  background: #e0f4fd;
+  border-color: #38bdf8;
+}
+
+.trigger-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.trigger-icon {
+  font-size: 22px;
+}
+
+.trigger-arrow {
+  margin-left: auto;
+  font-size: 20px;
+  color: #38bdf8;
+}
+
+/* ── Modal ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.18s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.modal-panel {
+  background: #fff;
+  width: 100%;
+  max-width: 600px;
+  max-height: 85vh;
+  border-radius: 20px 20px 0 0;
+  overflow-y: auto;
+  animation: slideUp 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(60px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+/* ── Gallery header ── */
+.gallery-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px 10px;
+  position: sticky;
+  top: 0;
+  background: white;
+  border-bottom: 1px solid #f0f0f0;
+  z-index: 1;
+}
+
+.gallery-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.close-btn {
+  background: #f0f0f0;
+  border: none;
+  border-radius: 50%;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.close-btn:hover {
+  background: #e0e0e0;
+}
+
+/* ── Gallery grid ── */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 14px;
+  padding: 16px 20px 24px;
+}
+
+.gallery-card {
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+  border: 1.5px solid #eee;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-img-wrap {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.gallery-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.2s ease;
+}
+
+.gallery-card:hover .gallery-img-wrap img {
+  transform: scale(1.05);
+}
+
+.gallery-card-info {
+  padding: 8px 10px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.food-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #222;
+}
+
+.food-kcal {
+  font-size: 11px;
+  color: #888;
+}
+
+/* ── Detail view ── */
+.detail-view {
+  display: flex;
+  flex-direction: column;
+  animation: fadeIn 0.15s ease;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #38bdf8;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 16px 20px 8px;
+  margin: 0;
+  text-align: left;
+}
+
+.back-btn:hover {
+  color: #0ea5e9;
+}
+
+.detail-img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+}
+
+.detail-body {
+  padding: 18px 20px 28px;
+}
+
+.detail-body h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.kcal-badge {
+  display: inline-block;
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.detail-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-confirm {
+  flex: 1;
+  background: #22c55e;
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin: 0;
+}
+
+.btn-confirm:hover {
+  background: #16a34a;
+}
+
+.btn-cancel {
+  flex: 1;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin: 0;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+}
