@@ -26,6 +26,18 @@ export class FoodGalleryComponent {
   gramsInput = signal<number | null>(null);
   countInput = signal<number | null>(null);
 
+  decrementCountInput() {
+    const cur = this.countInput() ?? 1;
+    if (cur > 1) {
+      this.countInput.set(cur - 1);
+    }
+  }
+
+  incrementCountInput() {
+    const cur = this.countInput() ?? 1;
+    this.countInput.set(cur + 1);
+  }
+
   openGallery() {
     this.previewFood.set(null);
     this.galleryOpen.set(true);

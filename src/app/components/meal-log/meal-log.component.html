@@ -1,5 +1,6 @@
 <div class="container" (click)="closeCalendar()">
   <!-- DATE NAVIGATION -->
+  <div class="current-date">{{ selectedDate() }}</div>
   <div class="date-nav">
     @for (day of last7Days(); track day.date) {
       <button
@@ -12,14 +13,26 @@
     }
 
     <div class="calendar-wrapper">
-      <button #calendarBtn class="calendar-btn" (click)="toggleCalendar(calendarBtn)">📅</button>
+      <button
+        #calendarBtn
+        class="calendar-btn"
+        (click)="$event.stopPropagation(); toggleCalendar(calendarBtn)"
+      >
+        📅
+      </button>
       @if (showCalendar()) {
         <div class="calendar-backdrop" (click)="closeCalendar()"></div>
-        <div class="calendar-dropdown" [style.top.px]="calendarTop()" [style.right.px]="calendarRight()">
+        <div
+          class="calendar-dropdown"
+          [style.top.px]="calendarTop()"
+          [style.right.px]="calendarRight()"
+          (click)="$event.stopPropagation()"
+        >
           <input
             type="date"
             [value]="selectedDate()"
             (change)="onCalendarChange($event)"
+            (click)="$event.stopPropagation()"
             class="calendar-input"
           />
         </div>
@@ -30,7 +43,7 @@
   <!-- MEALS LIST -->
   <div class="meals-section">
     @for (meal of mealsForSelectedDate(); track meal.id) {
-      <app-meal-card [meal]="meal" (remove)="remove($event)" />
+      <app-meal-card [meal]="meal" (remove)="remove($event)" (quickAdd)="handleQuickAdd($event)" (edit)="handleEditMeal($event)" />
     } @empty {
       <p class="empty-state">No meals logged for this day</p>
     }
@@ -80,13 +93,17 @@
         <!-- MEAL COUNT (servings) -->
         <div class="meal-count-section">
           <label>Meal count (servings):</label>
-          <input
-            type="number"
-            [value]="currentMealCount()"
-            (input)="currentMealCount.set(+$any($event.target).value)"
-            min="1"
-            class="square-input small-input"
-          />
+          <div class="count-controls">
+            <button type="button" (click)="decrementMealCount()" class="count-btn">-</button>
+            <input
+              type="number"
+              [value]="currentMealCount()"
+              (input)="currentMealCount.set(+$any($event.target).value)"
+              min="1"
+              class="square-input small-input"
+            />
+            <button type="button" (click)="incrementMealCount()" class="count-btn">+</button>
+          </div>
         </div>
 
         <!-- INGREDIENTS SQUARES -->
@@ -108,7 +125,23 @@
                   <strong (dblclick)="startEdit(i, 'name')">{{ ing.name }}</strong>
                 }
                 @if (ing.count != null) {
-                  <span (dblclick)="startEdit(i, 'calories')">{{ ing.count }} pcs</span>
+                  <div class="count-controls-ingredient">
+                    <button
+                      type="button"
+                      (click)="decrementIngredientCount(i)"
+                      class="count-btn secondary-btn"
+                    >
+                      -
+                    </button>
+                    <span>{{ ing.count || 1 }} pcs</span>
+                    <button
+                      type="button"
+                      (click)="incrementIngredientCount(i)"
+                      class="count-btn secondary-btn"
+                    >
+                      +
+                    </button>
+                  </div>
                 }
                 @if (editingIngredientIndex() === i && editingField() === 'calories') {
                   <input
@@ -152,7 +185,10 @@
               @if (ingredientNameSuggestions().length > 0) {
                 <div class="autocomplete-dropdown">
                   @for (suggestion of ingredientNameSuggestions(); track suggestion) {
-                    <div class="suggestion-item" (click)="selectIngredientNameSuggestion(suggestion)">
+                    <div
+                      class="suggestion-item"
+                      (click)="selectIngredientNameSuggestion(suggestion)"
+                    >
                       {{ suggestion }}
                     </div>
                   }
@@ -192,8 +228,12 @@
 
         <!-- CONFIRM BUTTON (bottom) -->
         <div class="modal-actions">
-          <button (click)="confirmMeal()" [disabled]="currentMealIngredients().length === 0">Confirm Meal</button>
-          <button class="cancel-btn" (click)="clearCurrentMeal(); showManualMealBuilder.set(false)">Cancel</button>
+          <button (click)="confirmMeal()" [disabled]="currentMealIngredients().length === 0">
+            Confirm Meal
+          </button>
+          <button class="cancel-btn" (click)="clearCurrentMeal(); showManualMealBuilder.set(false)">
+            Cancel
+          </button>
         </div>
       </div>
     </div>

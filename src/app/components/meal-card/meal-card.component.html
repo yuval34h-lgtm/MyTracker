@@ -23,4 +23,6 @@
     <p class="total-calories">{{ meal().totalCalories }} kcal</p>
   </div>
   <button class="remove-btn" (click)="remove.emit(meal().id)">✕</button>
+  <button class="bookmark-btn" (click)="quickAdd.emit(meal())">🔖</button>
+  <button class="edit-btn" (click)="edit.emit(meal())">✎</button>
 </div>

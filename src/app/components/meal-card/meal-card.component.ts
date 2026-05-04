@@ -27,4 +27,8 @@ export interface Meal {
 export class MealCardComponent {
   meal = input.required<Meal>();
   remove = output<string>();
+  // Emit when user wants to quick‑add this meal later
+  quickAdd = output<Meal>();
+  // Emit when user wants to edit this meal
+  edit = output<Meal>();
 }

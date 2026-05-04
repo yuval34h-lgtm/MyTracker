@@ -39,6 +39,18 @@ export class MealLogComponent {
   // Current meal being built
   currentMealName = signal('');
   currentMealCount = signal(1);
+
+  decrementMealCount() {
+    const current = this.currentMealCount();
+    if (current > 1) {
+      this.currentMealCount.set(current - 1);
+    }
+  }
+
+  incrementMealCount() {
+    const current = this.currentMealCount();
+    this.currentMealCount.set(current + 1);
+  }
   currentMealIngredients = signal<Ingredient[]>([]);
   showIngredientInput = signal(false);
   manualCount = signal<number | null>(null);
@@ -47,27 +59,26 @@ export class MealLogComponent {
   editingIngredientIndex = signal<number | null>(null);
   editingField = signal<'name' | 'calories' | null>(null);
 
-  // Focus tracking for autocomplete
-  mealNameFocused = signal(false);
-  ingredientNameFocused = signal(false);
-
+  // Track if a selection was just made
+  justSelectedMealName = signal(false);
+  justSelectedIngredientName = signal(false);
+  preventMealNameSuggestions = signal(false);
+  preventIngredientNameSuggestions = signal(false);
   // Autocomplete
   mealNameSuggestions = computed(() => {
-    if (!this.mealNameFocused()) return [];
     const input = this.currentMealName().toLowerCase();
     if (!input) return [];
     return this.foods()
-      .filter(f => f.name.toLowerCase().includes(input))
-      .map(f => f.name);
+      .filter((f) => f.name.toLowerCase().includes(input))
+      .map((f) => f.name);
   });
 
   ingredientNameSuggestions = computed(() => {
-    if (!this.ingredientNameFocused()) return [];
     const input = this.manualText().toLowerCase();
     if (!input) return [];
     return this.foods()
-      .filter(f => f.name.toLowerCase().includes(input))
-      .map(f => f.name);
+      .filter((f) => f.name.toLowerCase().includes(input))
+      .map((f) => f.name);
   });
 
   // Modal controls
@@ -175,11 +186,50 @@ export class MealLogComponent {
   }
 
   // Called from Quick Add gallery - adds directly to log
+  // Quick add count
+  quickAddCount = signal(1);
+
+  decrementQuickAddCount() {
+    const cur = this.quickAddCount();
+    if (cur > 1) {
+      this.quickAddCount.set(cur - 1);
+    }
+  }
+
+  incrementQuickAddCount() {
+    const cur = this.quickAddCount();
+    this.quickAddCount.set(cur + 1);
+  }
+
   onFoodSelectedForQuickAdd(selected: { food: Food; totalGrams: number }) {
     const food = selected.food;
     const grams = selected.totalGrams;
     const calories = (food.caloriesPer100g / 100) * grams;
-    this.addMealDirectly(food, grams, calories);
+    const count = this.quickAddCount();
+    // Use quickAddCount as servings multiplier
+    this.addMealDirectly(food, grams, calories * count);
+    // Reset quick add count to 1 after adding
+    this.quickAddCount.set(1);
+  }
+
+  // Handle bookmark (quick‑add) from meal card
+  handleQuickAdd(meal: Meal) {
+    this.meals.update((list) => [
+      {
+        ...meal,
+        id: crypto.randomUUID(),
+        date: this.selectedDate() + 'T12:00',
+      },
+      ...list,
+    ]);
+  }
+
+  // Handle edit button from meal card
+  handleEditMeal(meal: Meal) {
+    this.currentMealName.set(meal.name);
+    this.currentMealIngredients.set(meal.ingredients);
+    this.currentMealCount.set(1);
+    this.showManualMealBuilder.set(true);
   }
 
   // Add meal directly from Quick Add (not as ingredient)
@@ -203,8 +253,10 @@ export class MealLogComponent {
 
   selectMealNameSuggestion(name: string) {
     this.currentMealName.set(name);
+    this.preventMealNameSuggestions.set(true);
+    setTimeout(() => this.preventMealNameSuggestions.set(false), 100);
     // Auto-fill calories if known food
-    const food = this.foods().find(f => f.name === name);
+    const food = this.foods().find((f) => f.name === name);
     if (food) {
       this.manualCalories.set(food.caloriesPer100g);
     }
@@ -213,7 +265,7 @@ export class MealLogComponent {
   selectIngredientNameSuggestion(name: string) {
     this.manualText.set(name);
     // Auto-fill calories if known food
-    const food = this.foods().find(f => f.name === name);
+    const food = this.foods().find((f) => f.name === name);
     if (food) {
       this.manualCalories.set(food.caloriesPer100g);
       // If food has weightPerPiece, set default count to 1
@@ -221,6 +273,8 @@ export class MealLogComponent {
         this.manualCount.set(1);
       }
     }
+    this.preventIngredientNameSuggestions.set(true);
+    setTimeout(() => this.preventIngredientNameSuggestions.set(false), 100);
   }
 
   onManualImage(event: Event) {
@@ -236,7 +290,28 @@ export class MealLogComponent {
   }
 
   toggleIngredientInput() {
-    this.showIngredientInput.update(v => !v);
+    this.showIngredientInput.update((v) => !v);
+  }
+
+  // Ingredient count controls
+  decrementIngredientCount(index: number) {
+    this.currentMealIngredients.update((ingredients) => {
+      const ing = ingredients[index];
+      const current = ing.count ?? 1;
+      if (current > 1) {
+        ing.count = current - 1;
+      }
+      return [...ingredients];
+    });
+  }
+
+  incrementIngredientCount(index: number) {
+    this.currentMealIngredients.update((ingredients) => {
+      const ing = ingredients[index];
+      const current = ing.count ?? 1;
+      ing.count = current + 1;
+      return [...ingredients];
+    });
   }
 
   addManualIngredient() {
@@ -254,10 +329,7 @@ export class MealLogComponent {
       ingredient.count = count;
     }
 
-    this.currentMealIngredients.update((ingredients) => [
-      ...ingredients,
-      ingredient,
-    ]);
+    this.currentMealIngredients.update((ingredients) => [...ingredients, ingredient]);
 
     // Reset inputs and hide
     this.manualText.set('');
@@ -268,9 +340,7 @@ export class MealLogComponent {
   }
 
   removeCurrentIngredient(index: number) {
-    this.currentMealIngredients.update((ingredients) =>
-      ingredients.filter((_, i) => i !== index)
-    );
+    this.currentMealIngredients.update((ingredients) => ingredients.filter((_, i) => i !== index));
     this.cancelEdit();
   }
 
@@ -322,7 +392,7 @@ export class MealLogComponent {
     const multiplier = this.currentMealCount();
     const ingredientCalories = this.currentMealIngredients().reduce(
       (sum, ing) => sum + ing.calories,
-      0
+      0,
     );
     return ingredientCalories * multiplier;
   }
@@ -332,8 +402,7 @@ export class MealLogComponent {
     if (ingredients.length === 0) return;
 
     const totalCalories = this.currentMealTotalCalories;
-    const mealName =
-      this.currentMealName().trim() || this.generateMealName(ingredients);
+    const mealName = this.currentMealName().trim() || this.generateMealName(ingredients);
 
     this.meals.update((list) => [
       {

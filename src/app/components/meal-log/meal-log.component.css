@@ -394,12 +394,12 @@
   border-radius: 8px;
 }
 
-/* BUTTONS GENERAL */
-button {
-  padding: 10px;
-  background: #bbe5f2;
-  color: black;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.secondary-btn {
+  padding: 5px;
+}
+
+.count-controls-ingredient {
+  display: flex;
+  gap: 4px;
+  align-items: center;
 }

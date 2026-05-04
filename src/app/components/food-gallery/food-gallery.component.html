@@ -29,7 +29,11 @@
             @if (previewFood()!.weightPerPiece !== null) {
               <!-- Count input for foods with weight per piece -->
               <label>Count:</label>
-              <input type="number" min="1" [(ngModel)]="countInput" />
+              <div class="count-controls">
+                <button type="button" (click)="decrementCountInput()" class="count-btn">-</button>
+                <input type="number" min="1" [value]="countInput() ?? 1" (input)="countInput.set($any($event.target).valueAsNumber)" class="count-input" />
+                <button type="button" (click)="incrementCountInput()" class="count-btn">+</button>
+              </div>
             } @else {
               <!-- Grams input for foods measured by weight -->
               <label>Grams:</label>
