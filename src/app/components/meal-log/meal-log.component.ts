@@ -47,8 +47,13 @@ export class MealLogComponent {
   editingIngredientIndex = signal<number | null>(null);
   editingField = signal<'name' | 'calories' | null>(null);
 
+  // Focus tracking for autocomplete
+  mealNameFocused = signal(false);
+  ingredientNameFocused = signal(false);
+
   // Autocomplete
   mealNameSuggestions = computed(() => {
+    if (!this.mealNameFocused()) return [];
     const input = this.currentMealName().toLowerCase();
     if (!input) return [];
     return this.foods()
@@ -57,6 +62,7 @@ export class MealLogComponent {
   });
 
   ingredientNameSuggestions = computed(() => {
+    if (!this.ingredientNameFocused()) return [];
     const input = this.manualText().toLowerCase();
     if (!input) return [];
     return this.foods()
